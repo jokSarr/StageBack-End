@@ -4,9 +4,10 @@ import com.coursuasz.gpu.stagegpu.dto.LoginDTO;
 import com.coursuasz.gpu.stagegpu.dto.UtilisateurDTO;
 import com.coursuasz.gpu.stagegpu.jwt.JwtUtils;
 import com.coursuasz.gpu.stagegpu.mapper.UtilisateurMapper;
+import com.coursuasz.gpu.stagegpu.modele.ToutUtilisateur;
 import com.coursuasz.gpu.stagegpu.modele.Utilisateur;
-import com.coursuasz.gpu.stagegpu.service.UtilisateurDetailsService;
-import com.coursuasz.gpu.stagegpu.service.UtilisateurService;
+import com.coursuasz.gpu.stagegpu.service.ToutUtilisateurDetailsService;
+import com.coursuasz.gpu.stagegpu.service.ToutUtilisateurService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,20 +31,20 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Slf4j
 @Data
-public class UtilisateurController {
-    private final UtilisateurService utilisateurService;
+public class ToutUtilisateurController {
+    private final ToutUtilisateurService toutUtilisateurService;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
     private final AuthenticationManager authenticationManager;
     private UtilisateurMapper utilisateurMapper = Mappers.getMapper(UtilisateurMapper.class);
-    private final UtilisateurDetailsService userDetails;
+    private final ToutUtilisateurDetailsService userDetails;
 
     @PostMapping(path = "/inscrire")
     public ResponseEntity<?> ajouter (@RequestBody UtilisateurDTO utilisateurDTO) {
         Utilisateur utilisateur = utilisateurMapper.dTOToUtilisateur(utilisateurDTO);
         String password = passwordEncoder.encode("Passer123");
         utilisateur.setPassword(password);
-        utilisateurService.ajouter(utilisateur);
+        toutUtilisateurService.ajouter(utilisateur);
         return ResponseEntity.status(HttpStatus.CREATED).body(utilisateurDTO);
     }
 
@@ -56,7 +57,7 @@ public class UtilisateurController {
             if (authentication.isAuthenticated()) {
                 String username = ((UserDetails) authentication.getPrincipal()).getUsername();
                 System.out.println("username " + username);
-                Utilisateur user = userDetails.getUtilisateurByUsername(username);
+                ToutUtilisateur user = userDetails.getUtilisateurByUsername(username);
                 Map<String, Object> authData = new HashMap<>();
                 String role = user.getRole();
                 Long id = user.getId();
@@ -76,7 +77,7 @@ public class UtilisateurController {
 
     //liste
     @GetMapping("/liste")
-    public ResponseEntity<List<Utilisateur>> lister() {
-        return ResponseEntity.ok(utilisateurService.lister());
+    public ResponseEntity<List<ToutUtilisateur>> lister() {
+        return ResponseEntity.ok(toutUtilisateurService.lister());
     }
 }

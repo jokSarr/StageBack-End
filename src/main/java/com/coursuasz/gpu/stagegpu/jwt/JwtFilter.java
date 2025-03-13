@@ -1,6 +1,6 @@
 package com.coursuasz.gpu.stagegpu.jwt;
 
-import com.coursuasz.gpu.stagegpu.service.UtilisateurDetailsService;
+import com.coursuasz.gpu.stagegpu.service.ToutUtilisateurDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,7 +19,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 @Slf4j
 public class JwtFilter extends OncePerRequestFilter {
-    private final UtilisateurDetailsService utilisateurDetailsService;
+    private final ToutUtilisateurDetailsService toutUtilisateurDetailsService;
     private final JwtUtils jwtUtils;
 
     @Override
@@ -39,7 +39,7 @@ public class JwtFilter extends OncePerRequestFilter {
             try {
                 username = jwtUtils.extractUsername(jwtToken);
                 if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                    UserDetails userDetails = utilisateurDetailsService.loadUserByUsername(username);
+                    UserDetails userDetails = toutUtilisateurDetailsService.loadUserByUsername(username);
                     if (jwtUtils.validateToken(jwtToken, userDetails)) {
                         UsernamePasswordAuthenticationToken authenticationToken =
                                 new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());

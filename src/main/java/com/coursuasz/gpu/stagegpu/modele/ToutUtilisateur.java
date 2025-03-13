@@ -20,6 +20,7 @@ public class ToutUtilisateur {
     private String username;
     private String nom;
     private String prenom;
+    private String matricule;
     private String password;
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateCreation = new Date();

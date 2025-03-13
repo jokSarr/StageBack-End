@@ -2,7 +2,7 @@ package com.coursuasz.gpu.stagegpu.security;
 
 import com.coursuasz.gpu.stagegpu.jwt.JwtFilter;
 import com.coursuasz.gpu.stagegpu.jwt.JwtUtils;
-import com.coursuasz.gpu.stagegpu.service.UtilisateurDetailsService;
+import com.coursuasz.gpu.stagegpu.service.ToutUtilisateurDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,7 +21,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final UtilisateurDetailsService utilisateurDetailsService;
+    private final ToutUtilisateurDetailsService toutUtilisateurDetailsService;
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -31,21 +31,22 @@ public class SecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http, PasswordEncoder passwordEncoder) throws Exception {
         AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-        authenticationManagerBuilder.userDetailsService(utilisateurDetailsService).passwordEncoder(passwordEncoder);
+        authenticationManagerBuilder.userDetailsService(toutUtilisateurDetailsService).passwordEncoder(passwordEncoder);
         return authenticationManagerBuilder.build();
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, UtilisateurDetailsService utilisateurDetailsService, JwtUtils jwtUtils)  throws Exception{
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, ToutUtilisateurDetailsService toutUtilisateurDetailsService, JwtUtils jwtUtils)  throws Exception{
         return http
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorizeHttpRequests) ->
                         authorizeHttpRequests
                                 .requestMatchers("/auth/**").permitAll()
+                                .requestMatchers("/gestionnaire/**").permitAll()
                                 .anyRequest().authenticated()
                 )
-                .addFilterBefore(new JwtFilter(utilisateurDetailsService, jwtUtils), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtFilter(toutUtilisateurDetailsService, jwtUtils), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 }

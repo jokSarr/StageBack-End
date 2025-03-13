@@ -1,7 +1,8 @@
 package com.coursuasz.gpu.stagegpu.service;
 
+import com.coursuasz.gpu.stagegpu.modele.ToutUtilisateur;
 import com.coursuasz.gpu.stagegpu.modele.Utilisateur;
-import com.coursuasz.gpu.stagegpu.repository.UtilisateurRepository;
+import com.coursuasz.gpu.stagegpu.repository.ToutUtilisateurRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,12 +13,12 @@ import java.util.Collections;
 
 @Service
 @RequiredArgsConstructor
-public class UtilisateurDetailsService implements UserDetailsService {
-    private final UtilisateurRepository utilisateurRepository;
+public class ToutUtilisateurDetailsService implements UserDetailsService {
+    private final ToutUtilisateurRepository toutUtilisateurRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Utilisateur utilisateur = utilisateurRepository.findByUsername(username);
+        ToutUtilisateur utilisateur = toutUtilisateurRepository.findByUsername(username);
         if (utilisateur == null) {
             throw new UsernameNotFoundException("Utilisateur inexistant : " + username);
         }
@@ -31,7 +32,7 @@ public class UtilisateurDetailsService implements UserDetailsService {
         );
     }
 
-    public Utilisateur getUtilisateurByUsername(String username) {
-        return utilisateurRepository.findByUsername(username);
+    public ToutUtilisateur getUtilisateurByUsername(String username) {
+        return toutUtilisateurRepository.findByUsername(username);
     }
 }
