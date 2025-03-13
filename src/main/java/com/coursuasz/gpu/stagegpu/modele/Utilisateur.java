@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Utilisateur extends ToutUtilisateur{
-    private String matricule;
+    private String telephone;
 }

@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @Data
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Gestionnaire extends ToutUtilisateur{
-    private String matricule;
+   private String grade;
 }

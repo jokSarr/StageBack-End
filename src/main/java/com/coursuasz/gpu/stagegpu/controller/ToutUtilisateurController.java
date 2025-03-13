@@ -75,7 +75,6 @@ public class ToutUtilisateurController {
         }
     }
 
-    //liste
     @GetMapping("/liste")
     public ResponseEntity<List<ToutUtilisateur>> lister() {
         return ResponseEntity.ok(toutUtilisateurService.lister());

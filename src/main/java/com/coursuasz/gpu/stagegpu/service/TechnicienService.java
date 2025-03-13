@@ -30,7 +30,7 @@ public class TechnicienService {
         }
     }
 
-    public Technicien rechercher(Long id){
+    public Technicien rechercherTech(Long id){
         try {
             return technicienRepository.findById(id).get();
         }catch (Exception e){
@@ -46,7 +46,7 @@ public class TechnicienService {
 
     public Technicien modifier(Long id, Technicien updatedTechnicien) {
         Technicien existingTechnicien = technicienRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Permanent avec ID " + id + " non trouvé"));
+                .orElseThrow(() -> new ResourceNotFoundException("Technicien avec ID " + id + " non trouvé"));
 
 
         existingTechnicien.setUsername(updatedTechnicien.getUsername());
@@ -61,7 +61,7 @@ public class TechnicienService {
     }
 
     public void supprimer(Long id) {
-        Technicien technicien = rechercher(id);
+        Technicien technicien = rechercherTech(id);
         technicienRepository.delete(technicien);
     }
 }

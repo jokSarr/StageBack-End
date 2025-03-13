@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 @Inheritance( strategy = InheritanceType.JOINED)
 public class Technicien extends ToutUtilisateur {
     private String specialite;
+    private String grade;
 }
