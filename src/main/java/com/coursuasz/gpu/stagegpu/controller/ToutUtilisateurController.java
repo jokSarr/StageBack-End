@@ -92,10 +92,10 @@ public class ToutUtilisateurController {
                 // Génération du token JWT
                 String jwtToken = jwtUtils.generateToken(username, role, id);
 
-                // Création des headers
+
                 return ResponseEntity.ok()
-                        .header("Authorization", "Bearer " + jwtToken) // Ajout du token dans le header
-                        .body(Map.of("role", role, "id", id)); // Renvoyer d'autres infos dans le corps si nécessaire
+                        .header("Authorization", "Bearer " + jwtToken)
+                        .body(Map.of("role", role, "id", id));
             }
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Erreur sur username ou password");
         } catch (AuthenticationException e) {

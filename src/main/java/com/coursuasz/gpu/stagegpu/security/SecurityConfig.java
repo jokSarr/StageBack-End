@@ -44,6 +44,7 @@ public class SecurityConfig {
                         authorizeHttpRequests
                                 .requestMatchers("/auth/**").permitAll()
                                 .requestMatchers("/gestionnaire/**").permitAll()
+                                .requestMatchers("/techniciens/pannes/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JwtFilter(toutUtilisateurDetailsService, jwtUtils), UsernamePasswordAuthenticationFilter.class)
