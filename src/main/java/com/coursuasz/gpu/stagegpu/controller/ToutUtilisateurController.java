@@ -48,32 +48,62 @@ public class ToutUtilisateurController {
         return ResponseEntity.status(HttpStatus.CREATED).body(utilisateurDTO);
     }
 
+    // @PostMapping(path = "/connecter")
+    // public ResponseEntity<?> authentifier(@RequestBody LoginDTO loginDTO) {
+    //     Utilisateur utilisateur = utilisateurMapper.loginToUtilisateur(loginDTO);
+    //     System.out.println("L'utilisateur mappe est: " + utilisateur.getUsername() + " " + utilisateur.getRole());
+    //     try {
+    //         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(utilisateur.getUsername(), utilisateur.getPassword()));
+    //         if (authentication.isAuthenticated()) {
+    //             String username = ((UserDetails) authentication.getPrincipal()).getUsername();
+    //             System.out.println("username " + username);
+    //             ToutUtilisateur user = userDetails.getUtilisateurByUsername(username);
+    //             Map<String, Object> authData = new HashMap<>();
+    //             String role = user.getRole();
+    //             Long id = user.getId();
+
+    //             System.out.println(role);
+    //             authData.put("token",jwtUtils.generateToken(username, role,id));
+    //             authData.put("type", "Bearer");
+    //             authData.put("role", role);
+    //             return ResponseEntity.ok(authData);
+    //         }
+    //         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("erreur sur username ou password");
+    //     }catch (AuthenticationException e) {
+    //         log.error(e.getMessage());
+    //         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("erreur sur username ou password");
+    //     }
+    // }
+
     @PostMapping(path = "/connecter")
     public ResponseEntity<?> authentifier(@RequestBody LoginDTO loginDTO) {
         Utilisateur utilisateur = utilisateurMapper.loginToUtilisateur(loginDTO);
-        System.out.println("L'utilisateur mappe est: " + utilisateur.getUsername() + " " + utilisateur.getRole());
         try {
-            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(utilisateur.getUsername(), utilisateur.getPassword()));
+            Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(utilisateur.getUsername(), utilisateur.getPassword())
+            );
+
             if (authentication.isAuthenticated()) {
                 String username = ((UserDetails) authentication.getPrincipal()).getUsername();
-                System.out.println("username " + username);
                 ToutUtilisateur user = userDetails.getUtilisateurByUsername(username);
-                Map<String, Object> authData = new HashMap<>();
                 String role = user.getRole();
                 Long id = user.getId();
 
-                System.out.println(role);
-                authData.put("token",jwtUtils.generateToken(username, role,id));
-                authData.put("type", "Bearer");
-                authData.put("role", role);
-                return ResponseEntity.ok(authData);
+                // Génération du token JWT
+                String jwtToken = jwtUtils.generateToken(username, role, id);
+
+                // Création des headers
+                return ResponseEntity.ok()
+                        .header("Authorization", "Bearer " + jwtToken) // Ajout du token dans le header
+                        .body(Map.of("role", role, "id", id)); // Renvoyer d'autres infos dans le corps si nécessaire
             }
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("erreur sur username ou password");
-        }catch (AuthenticationException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Erreur sur username ou password");
+        } catch (AuthenticationException e) {
             log.error(e.getMessage());
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("erreur sur username ou password");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Erreur sur username ou password");
         }
     }
+
 
     @GetMapping("/liste")
     public ResponseEntity<List<ToutUtilisateur>> lister() {
